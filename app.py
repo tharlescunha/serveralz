@@ -1,11 +1,33 @@
-import socket
+import asyncio
+import websockets
+import requests
+import json
 
-client = socket.socket()
-client.connect(('622a-177-126-81-235.ngrok-free.app', 8080))
+async def cliente_tunel():
+    uri = "wss://serveralz.azurewebsites.net/ws/cliente_1/"
+    print("[CLIENTE] Conectando ao servidor...")
 
-print("[CLIENTE] Conectado ao servidor")
+    async with websockets.connect(uri) as websocket:
+        print("[CLIENTE] Conectado!")
 
-# Simula uma requisição recebida no servidor
-while True:
-    data = input("Digite algo para enviar ao servidor: ")
-    client.send(data.encode())
+        while True:
+            msg = await websocket.recv()
+            print(f"[CLIENTE] Mensagem recebida: {msg}")
+
+            data = json.loads(msg)
+
+            if data.get("acao") == "fazer_requisicao_local":
+                url_local = data.get("url_local", "http://localhost:5000/")
+                try:
+                    resposta = requests.get(url_local)
+                    await websocket.send(json.dumps({
+                        "status": "ok",
+                        "resposta": resposta.text
+                    }))
+                except Exception as e:
+                    await websocket.send(json.dumps({
+                        "status": "erro",
+                        "mensagem": str(e)
+                    }))
+
+asyncio.run(cliente_tunel())
