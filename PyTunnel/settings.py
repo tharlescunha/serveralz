@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-j2g-zeh3cj4e&!+$^kj8w2thidg^10hg41t35)$rnc1*h!8(yk
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 ASGI_APPLICATION = 'PyTunnel.asgi.application'
 
