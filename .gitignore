@@ -10,7 +10,6 @@ venv
 app
 app.py
 
-core/settings copy.py
 
 #src
 #*.sqlite*
@@ -25,14 +24,12 @@ settings.job
 WebJobs.py
 
 
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
 
 user
-
 
 # Distribution / packaging
 .Python
@@ -87,8 +84,6 @@ db.sqlite3-journal
 # PEP 582; used by e.g. github.com/David-OConnor/pyflow
 __pypackages__/
 
-core/settings.py
-settings.py
 
 # venvironments
 .venv
@@ -101,12 +96,5 @@ vev.bak/
 
 utils\arquivo.csv
 
-core\settings.py
-settings.py
 utils/arquivo.csv
-core/settings.py
 
-
-# Config
-
-core/settings.py

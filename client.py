@@ -14,7 +14,7 @@ queue_name = 'proxy_requests'
 channel.queue_declare(queue=queue_name, durable=True)
 
 async def client_loop():
-    uri = "ws://127.0.0.1:8000/ws/client/cliente_1/"
+    uri = "wss://serveralz.azurewebsites.net/ws/client/cliente_1/"
     async with websockets.connect(uri) as websocket:
         print("Conectado como cliente_1")
 
