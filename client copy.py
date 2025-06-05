@@ -1,17 +1,8 @@
+# client.py
 import asyncio
 import websockets
 import json
-import pika
-
-# Configuração do broker AMQP
-broker_url = 'amqp://root:root@172.31.156.214:5672/%2F'
-
-# Conexão pika (AMQP)
-params = pika.URLParameters(broker_url)
-connection = pika.BlockingConnection(params)
-channel = connection.channel()
-queue_name = 'proxy_requests'
-channel.queue_declare(queue=queue_name, durable=True)
+import requests
 
 async def client_loop():
     uri = "ws://127.0.0.1:8000/ws/client/cliente_1/"
@@ -25,21 +16,15 @@ async def client_loop():
             if data.get("action") == "proxy_request":
                 request_data = data.get("request", {})
                 request_id = request_data.get("request_id")
+                path = request_data.get("path")
+                url_local = f"http://localhost:8000{path}"
 
                 try:
-                    # Publica no broker AMQP
-                    channel.basic_publish(
-                        exchange='',
-                        routing_key=queue_name,
-                        body=json.dumps(request_data),
-                        properties=pika.BasicProperties(
-                            delivery_mode=2,  # make message persistent
-                        )
-                    )
-                    status = 200
-                    content = f"Request enviada para fila {queue_name}"
+                    response = requests.get(url_local)
+                    content = response.text
+                    status = response.status_code
                 except Exception as e:
-                    content = f"Erro ao enviar AMQP: {str(e)}"
+                    content = f"Erro local: {str(e)}"
                     status = 500
 
                 response_msg = {
